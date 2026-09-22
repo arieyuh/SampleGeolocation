@@ -86,6 +86,18 @@
         android:layout_marginTop="50dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/country"/>
+    
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/darkModeSwitch"
+        android:text="Dark Mode"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/getLocation"/>
 
 
 </RelativeLayout>
