@@ -1,7 +1,9 @@
 package com.example.samplegeolocation;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.Manifest;
 import androidx.annotation.NonNull;
@@ -16,6 +18,7 @@ import android.location.Location;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     TextView latitude, longitude, address, city, country;
     Button getLocation;
+    Switch darkModeSwitch;
+    SharedPreferences sharedPreferences;
 
     private final static int REQUEST_CODE = 100;
 
@@ -49,6 +54,21 @@ public class MainActivity extends AppCompatActivity {
         country = findViewById(R.id.country);
         getLocation = findViewById(R.id.getLocation);
 
+        // Initialize dark mode switch and load saved preference
+        darkModeSwitch = findViewById(R.id.darkModeSwitch);
+        sharedPreferences = getSharedPreferences("AppSettings", MODE_PRIVATE);
+
+        boolean isDarkMode = sharedPreferences.getBoolean("darkMode", false);
+        darkModeSwitch.setChecked(isDarkMode);
+        applyDarkMode(isDarkMode);
+
+        darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("darkMode", isChecked);
+            editor.apply();
+            applyDarkMode(isChecked);
+        });
+
         // Initialize location services
         fusedLocationProviderClient =
                 LocationServices.getFusedLocationProviderClient(this);
@@ -60,6 +80,15 @@ public class MainActivity extends AppCompatActivity {
                 getLastLocation();
             }
         });
+    }
+
+    // Switch the app theme between light and dark, and remember the setting
+    private void applyDarkMode(boolean isDarkMode) {
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 
     // Get the last known location
